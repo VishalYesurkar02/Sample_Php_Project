@@ -16,11 +16,11 @@ pipeline {
                expression {env.BRANCH_NAME == 'master'}
             }                     
             steps {
-
-             sshagent (credentials: ['VishalYesurkar'])                        
+             sshagent (credentials: ['VishalYesurkar02'])                        
                 {
                 script {
-                   
+                        sh "git config --add remote.origin.fetch +refs/heads/master:refs/remotes/origin/master"
+                        sh "git fetch"
                         def tag = sh(returnStdout: true, script: "git tag | tail -1").trim()
                         println tag
                         def semVerLib = load 'SemVer.groovy'
