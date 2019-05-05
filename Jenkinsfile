@@ -17,17 +17,15 @@ pipeline {
         sh '/bin/phpunit ${WORKSPACE}/src'
       }
     }
-  
-  }
-stage("Create new tag") {
+    stage("Create new tag") {
          when {
                expression {env.BRANCH_NAME == 'master'}
-            }                     
+            }
             steps {
-             sshagent (credentials: ['test-git-tag'])                        
+             //sshagent (credentials: ['test-git-tag'])
                 {
                 script {
-                   
+
                         def tag = sh(returnStdout: true, script: "git tag | tail -1").trim()
                         println tag
                         def semVerLib = load 'SemVer.groovy'
@@ -40,10 +38,15 @@ stage("Create new tag") {
                                 -m "Build: ${env.BUILD_NUMBER}"
                             git push --tags
                         """
-                    
+
                 }
-              }
-                
+             }
+
             }
-        }
+    }
+
+  }
+}
+
+
 
